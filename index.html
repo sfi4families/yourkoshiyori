@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting...</title>
+    <script>
+        // Secret key (must match Python)
+        const secretKey = "my-secret-key";
+
+        // Encrypted URL (replace with your encrypted string)
+        const encryptedData = "BQ1ZAxZZXUoZWUUXCAwPVBJXTQEEWk4ECFYEF0kWHU0CDQQSHgwdUA==";
+
+        function xorDecrypt(text, key) {
+            return text.split('').map((char, i) => 
+                String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(i % key.length))
+            ).join('');
+        }
+
+        function decryptUrl(encryptedText) {
+            try {
+                const decoded = atob(encryptedText.replace(/_/g, "/").replace(/-/g, "+"));
+                return xorDecrypt(decoded, secretKey);
+            } catch (e) {
+                console.error("Decryption Error:", e);
+                return null;
+            }
+        }
+
+        // Redirect to decrypted URL
+        window.onload = function () {
+            const originalUrl = decryptUrl(encryptedData);
+            console.log("Decrypted URL:", originalUrl); // Debugging
+            if (originalUrl) {
+                window.location.href = originalUrl;
+            } else {
+                document.body.innerHTML = "<h2>Invalid Link</h2>";
+            }
+        };
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>
